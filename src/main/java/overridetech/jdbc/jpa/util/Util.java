@@ -31,7 +31,7 @@ public class Util {
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .applySetting("hibernate.connection.driver_class", "org.sqlite.JDBC") // класс драйвера JDBC
                 .applySetting("hibernate.connection.url", DB_URL) // URL подключения к базе данных
-                .applySetting("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect") // диалект Hibernate, соответствующий используемой базе данных
+                .applySetting("hibernate.dialect", "org.hibernate.community.dialect.SQLiteDialect") // диалект Hibernate, соответствующий используемой базе данных
                 .applySetting("hibernate.show_sql", true) // настройка для включения/выключения логирования SQL-запросов
                 .applySetting("hibernate.hbm2ddl.auto", "none")
                 //.applySetting("hibernate.hbm2ddl.auto", "update") // настройка для автоматического создания и обновления схем базы данных
