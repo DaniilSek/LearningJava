@@ -81,7 +81,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("FROM Users", User.class);
+            Query<User> query = session.createQuery("FROM User", User.class);
             return query.list();
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,7 +93,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void cleanUsersTable() {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            Query query = session.createQuery("DELETE FROM Users");
+            Query query = session.createQuery("DELETE FROM User");
             query.executeUpdate();
             transaction.commit();
             System.out.println("Таблица Users очищена");
