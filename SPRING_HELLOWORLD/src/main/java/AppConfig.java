@@ -11,4 +11,11 @@ public class AppConfig {
         helloWorld.setMessage("Hello World!");
         return helloWorld;
     }
+ 
+    @Bean(name="cat")
+    @Scope("prototype") // для создания нового бина каждый раз, когда он запрашивается  
+    public Cat getCat() {
+        Cat cat = new Cat("Стич", "Пришелец", (byte) 1);
+        return cat;
+    }
 }
