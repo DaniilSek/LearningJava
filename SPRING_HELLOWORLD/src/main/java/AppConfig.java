@@ -15,7 +15,6 @@ public class AppConfig {
     @Bean(name="cat")
     @Scope("prototype") // для создания нового бина каждый раз, когда он запрашивается  
     public Cat getCat() {
-        Cat cat = new Cat("Стич", "Пришелец", (byte) 1);
-        return cat;
+        return new Cat("Стич", "Пришелец", (byte) 1);
     }
 }
