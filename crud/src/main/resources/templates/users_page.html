@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Management</title>
+  <style>
+    /* Устанавливаем светло-серый фон для всей страницы */
+    body {
+      background-color: #f0f0f0; /* Светло-серый цвет */
+    }
+
+    /* Цвет для кнопки Edit */
+    .edit-btn {
+      color: white; /* Белый текст */
+      background-color: blue; /* Синий цвет фона */
+      text-decoration: none; /* Убираем подчеркивание */
+      padding: 1px 10px; /* Немного увеличим отступы */
+      border-radius: 5px; /* Округлим углы */
+    }
+
+    /* Цвет для кнопки Delete */
+    .delete-btn {
+      color: white; /* Белый текст */
+      background-color: red; /* Красный цвет фона */
+      text-decoration: none; /* Убираем подчеркивание */
+      padding: 1px 10px; /* Немного увеличим отступы */
+      border-radius: 5px; /* Округлим углы */
+    }
+  </style>
+</head>
+<body>
+<h1>User List</h1>
+<div th:if="${not #lists.isEmpty(users)}">
+  <table border="1">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Actions</th>
+    </tr>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.name}"></td>
+      <td th:text="${user.age}"></td>
+      <td>
+        <a th:href="@{'/edit/' + ${user.id}}" class="edit-btn">Edit</a> |
+        <a th:href="@{'/delete/' + ${user.id}}" class="delete-btn">Delete</a>
+      </td>
+    </tr>
+  </table>
+</div>
+<a href="/addNew">Add New User</a>
+</body>
+</html>
