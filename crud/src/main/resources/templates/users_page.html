@@ -1,54 +1,106 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>User Management</title>
-  <style>
-    /* Устанавливаем светло-серый фон для всей страницы */
-    body {
-      background-color: #f0f0f0; /* Светло-серый цвет */
-    }
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <style>
+        /* Устанавливаем светло-серый фон для всей страницы */
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif; /* Меняем шрифт на более удобный */
+        }
 
-    /* Цвет для кнопки Edit */
-    .edit-btn {
-      color: white; /* Белый текст */
-      background-color: blue; /* Синий цвет фона */
-      text-decoration: none; /* Убираем подчеркивание */
-      padding: 1px 10px; /* Немного увеличим отступы */
-      border-radius: 5px; /* Округлим углы */
-    }
+        /* Улучшенные стили для таблицы */
+        table {
+            width: 100%; /* Таблица занимает всю ширину контейнера */
+            border-collapse: separate; /* Разделяем границы ячеек */
+            border-spacing: 0; /* Убираем пространство между ячейками */
+            border: 1px solid #ccc; /* Тонкая сероватая граница */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Небольшая тень для объема */
+        }
 
-    /* Цвет для кнопки Delete */
-    .delete-btn {
-      color: white; /* Белый текст */
-      background-color: red; /* Красный цвет фона */
-      text-decoration: none; /* Убираем подчеркивание */
-      padding: 1px 10px; /* Немного увеличим отступы */
-      border-radius: 5px; /* Округлим углы */
-    }
-  </style>
+        th, td {
+            padding: 15px; /* Увеличим внутреннюю рамку для удобства чтения */
+            text-align: center; /* Центрируем текст в ячейках */
+            border: 1px solid #ddd; /* Легкая граница для ячеек */
+        }
+
+        thead {
+            background-color: #f9f9f9; /* Серый оттенок для заголовков */
+        }
+
+        th {
+            font-weight: bold; /* Делаем заголовки жирными */
+        }
+
+        /* Цвет для кнопки Edit */
+        .edit-btn {
+            color: white; /* Белый текст */
+            background-color: royalblue; /* Более насыщенный синий цвет */
+            text-decoration: none; /* Убираем подчеркивание */
+            padding: 8px 12px; /* Оптимальные отступы для кнопки */
+            border-radius: 5px; /* Округлим углы */
+            transition: all 0.3s ease; /* Добавим плавный переход при наведении */
+        }
+
+        .edit-btn:hover {
+            background-color: darkblue; /* Темно-синий цвет при наведении */
+        }
+
+        /* Цвет для кнопки Delete */
+        .delete-btn {
+            color: white; /* Белый текст */
+            background-color: firebrick; /* Насыщенно-красный цвет */
+            text-decoration: none; /* Убираем подчеркивание */
+            padding: 8px 12px; /* Оптимальные отступы для кнопки */
+            border-radius: 5px; /* Округлим углы */
+            transition: all 0.3s ease; /* Добавим плавный переход при наведении */
+        }
+
+        .delete-btn:hover {
+            background-color: maroon; /* Темно-красный цвет при наведении */
+        }
+
+        /* Добавим немного стиля для кнопки "Add New User" */
+        .add-new-btn {
+            position: absolute; /* Абсолютное позиционирование */
+            top: 30px; /* Смещение от верхнего края */
+            right: 40px; /* Смещение от правого края */
+            padding: 8px 12px; /* Отступы внутри кнопки */
+            background-color: mediumseagreen; /* Приятный зеленый цвет */
+            color: white; /* Белый текст */
+            text-decoration: none; /* Убираем подчеркивание */
+            border-radius: 5px; /* Округлим углы */
+            transition: all 0.3s ease; /* Плавный переход при наведении */
+        }
+
+        .add-new-btn:hover {
+            background-color: seagreen; /* Темно-зеленый цвет при наведении */
+        }
+    </style>
 </head>
 <body>
-<h1>User List</h1>
+<h1 style="position: relative;">User List</h1>
 <div th:if="${not #lists.isEmpty(users)}">
-  <table border="1">
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Age</th>
-      <th>Actions</th>
-    </tr>
-    <tr th:each="user : ${users}">
-      <td th:text="${user.id}"></td>
-      <td th:text="${user.name}"></td>
-      <td th:text="${user.age}"></td>
-      <td>
-        <a th:href="@{'/edit/' + ${user.id}}" class="edit-btn">Edit</a> |
-        <a th:href="@{'/delete/' + ${user.id}}" class="delete-btn">Delete</a>
-      </td>
-    </tr>
-  </table>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.age}"></td>
+            <td>
+                <a th:href="@{'/edit/' + ${user.id}}" class="edit-btn">Edit</a>
+                <a th:href="@{'/delete/' + ${user.id}}" class="delete-btn">Delete</a>
+            </td>
+        </tr>
+    </table>
 </div>
-<a href="/addNew">Add New User</a>
+<!-- Перемещаем кнопку "Add New User" наверх, правее надписи "User List" -->
+<a href="/addNew" class="add-new-btn">Add New User</a>
 </body>
 </html>
