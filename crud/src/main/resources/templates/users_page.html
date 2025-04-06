@@ -87,12 +87,14 @@
             <th>ID</th>
             <th>Name</th>
             <th>Age</th>
+            <th>Email</th>
             <th>Actions</th>
         </tr>
         <tr th:each="user : ${users}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.name}"></td>
-            <td th:text="${user.age}"></td>
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getName()}"></td>
+            <td th:text="${user.getAge()}"></td>
+            <td th:text="${user.getEmail()}"></td>
             <td>
                 <a th:href="@{'/edit/' + ${user.id}}" class="edit-btn">Edit</a>
                 <a th:href="@{'/delete/' + ${user.id}}" class="delete-btn">Delete</a>
@@ -100,7 +102,6 @@
         </tr>
     </table>
 </div>
-<!-- Перемещаем кнопку "Add New User" наверх, правее надписи "User List" -->
 <a href="/addNew" class="add-new-btn">Add New User</a>
 </body>
 </html>
