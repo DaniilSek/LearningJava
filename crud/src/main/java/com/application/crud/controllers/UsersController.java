@@ -1,35 +1,66 @@
 package com.application.crud.controllers;
 
-import com.application.crud.dao.UserDaoHibernate;
+import com.application.crud.model.User;
+import com.application.crud.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/users")
 public class UsersController {
 
-    private final UserDaoHibernate userDaoHibernate;
+    private final UserService userService;
 
-    public UsersController(UserDaoHibernate userDaoHibernate) {
-        this.userDaoHibernate = userDaoHibernate;
+    @Autowired
+    public UsersController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping()
-    public String index(Model model) {
+    public String getAllUsers(Model model) {
         // получение пользователей из DAO и передача на отображение
-        model.addAttribute("users", userDaoHibernate.getAllUsers());
-        return "users/index";
+        model.addAttribute("users", userService.getAllusers());
+        return "users_page";
     }
 
-    @GetMapping("/{id}")
-    public String show(@PathVariable("id") long id, Model model) {
-        // Получение одного человека по id из DAO и передача его на отображение
-        model.addAttribute("user", userDaoHibernate.getUserById(id));
-        return "users/show";
+//    @GetMapping("/{id}")
+//    public String getUserById(@PathVariable("id") long id, Model model) {
+//        // Получение одного человека по id из DAO и передача его на отображение
+//        model.addAttribute("user", userService.findById(id));
+//        return "users_page";
+//    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUserById(@PathVariable("id") long id) {
+        userService.deleteById(id);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/add_user")
+    public String showAddUserForm(@ModelAttribute("user") User user) {
+        //model.addAttribute("user", new User());
+        return "add_user";
+    }
+
+    @PostMapping("/addNew")
+    public String createUser(User user) {
+        userService.save(user);
+        return "redirect:/users";
+    }
+
+    @GetMapping("/edit_user/{id}")
+    public String showEditUserForm(@PathVariable("id") long id, Model model) {
+        model.addAttribute("user", userService.findById(id));
+        return "edit_user";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateUserById(@PathVariable("id") long id, User user) {
+        user.setId(id);
+        userService.save(user);
+        return "redirect:/users";
     }
 
 }
