@@ -1,36 +1,42 @@
-package com.application.crud.util;
+package com.application.crud.services;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import com.application.crud.model.User;
+import com.application.crud.repositories.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class Util {
+import java.util.List;
 
-    private static final String DB_URL = "jdbc:sqlite::memory:";
+@Component
+public class UserService {
 
-    public static SessionFactory setupSessionFactory() {
-        // Создаем StandardServiceRegistry для настройки параметров Hibernate
-        StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .applySetting("hibernate.connection.driver_class", "org.sqlite.JDBC") // класс драйвера JDBC
-                .applySetting("hibernate.connection.url", DB_URL) // URL подключения к базе данных
-                .applySetting("hibernate.dialect", "org.hibernate.community.dialect.SQLiteDialect") // диалект Hibernate, соответствующий используемой базе данных
-                .applySetting("hibernate.show_sql", true) // настройка для включения/выключения логирования SQL-запросов
-                .applySetting("hibernate.hbm2ddl.auto", "none")
-                //.applySetting("hibernate.hbm2ddl.auto", "update") // настройка для автоматического создания и обновления схем базы данных
-                .build();
+    private UserRepository userRepository;
 
-        try {
-            // Создаем SessionFactory
-            SessionFactory sessionFactory = new MetadataSources(registry)
-                    .addAnnotatedClass(com.application.crud.model.User.class) // Указываем классы, которые будут управляться Hibernate
-                    .buildMetadata()
-                    .buildSessionFactory();
-            return sessionFactory;
-        } catch (Exception e) {
-            // Утилизация StandardServiceRegistry при возникновении ошибки
-            StandardServiceRegistryBuilder.destroy(registry);
-            throw new RuntimeException(e);
-        }
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
+    @Transactional
+    public List<User> getAllusers() {
+        return userRepository.findAll();
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+//    public void updateUserById() {
+//        userRepository.updateUserById();
+//    }
+
 }
