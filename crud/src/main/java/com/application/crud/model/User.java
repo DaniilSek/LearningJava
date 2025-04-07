@@ -1,25 +1,28 @@
 package com.application.crud.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
+//import org.springframework.data.annotation.Id;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "name")
     private String name;
-    private byte age;
+    @Column(name = "age")
+    private Integer age;
+    @Column(name = "email")
     private String email;
 
     public User() {}
 
-    public User(String name, byte age, String email) {this(null, name, age, email);}
+    public User(String name, Integer age, String email) {this(null, name, age, email);}
 
-    public User(Long id, String name, byte age, String email) {
+    public User(Long id, String name, Integer age, String email) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -42,11 +45,11 @@ public class User {
         this.name = name;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(byte age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
