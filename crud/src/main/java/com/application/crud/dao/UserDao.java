@@ -1,19 +1,9 @@
-package com.application.crud.dao;
+package com.application.crud.repositories;
 import com.application.crud.model.User;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
-public interface UserDao {
-    void createUsersTable();
+@Component
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    void dropUsersTable();
-
-    void saveUser(String name, byte age, String email);
-
-    void removeUserById(long id);
-
-    public User getUserById(long id);
-
-    List<User> getAllUsers();
-
-    void cleanUsersTable();
 }
