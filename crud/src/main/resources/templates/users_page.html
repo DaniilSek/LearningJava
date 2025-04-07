@@ -96,12 +96,12 @@
             <td th:text="${user.getAge()}"></td>
             <td th:text="${user.getEmail()}"></td>
             <td>
-                <a th:href="@{'/edit/' + ${user.id}}" class="edit-btn">Edit</a>
-                <a th:href="@{'/delete/' + ${user.id}}" class="delete-btn">Delete</a>
+                <a th:href="@{'users/edit_user/' + ${user.id}}" class="edit-btn">Edit</a>
+                <a th:href="@{'users/delete/' + ${user.id}}" class="delete-btn">Delete</a>
             </td>
         </tr>
     </table>
 </div>
-<a href="/addNew" class="add-new-btn">Add New User</a>
+<a href="/users/add_user" class="add-new-btn">Add New User</a>
 </body>
 </html>
