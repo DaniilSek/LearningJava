@@ -1,6 +1,9 @@
 package com.application.crud.model;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 //import org.springframework.data.annotation.Id;
 
 @Entity
@@ -17,6 +20,14 @@ public class User {
     private Integer age;
     @Column(name = "email")
     private String email;
+    @Column(name = "password")
+    private String password;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<String> roles;
+
 
     public User() {}
 
@@ -61,12 +72,36 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(String role) {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        roles.add(role);
+    }
+
     // Переопределение метода toString для удобного вывода информации о пользователе
     @Override
     public String toString() {
         return "id=" + id +
                 ", name=" + name +
                 ", age=" + age +
-                ", email=" + email;
+                ", email=" + email +
+                ", roles=" + roles.toString();
     }
 }

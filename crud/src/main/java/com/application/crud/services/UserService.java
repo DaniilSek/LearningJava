@@ -4,8 +4,11 @@ import com.application.crud.model.User;
 import com.application.crud.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -15,7 +18,20 @@ public class UserService {
 
     @Autowired
     public UserService(UserRepository userRepository) {
+
         this.userRepository = userRepository;
+//        if (userRepository.findByRolesContaining("ADMIN").isEmpty()) {
+//            // Создаем нового пользователя с ролью ADMIN
+//            User admin = new User();
+//            admin.setName("admin");
+//            //admin.setPassword(passwordEncoder.encode("admin"));
+//            admin.setPassword("admin");
+//            admin.setRoles(Collections.singleton("ADMIN"));
+//
+//            // Сохраняем пользователя admin в базу данных
+//            userRepository.save(admin);
+//        }
+
     }
 
     @Transactional

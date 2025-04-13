@@ -95,6 +95,7 @@
             <td th:text="${user.getName()}"></td>
             <td th:text="${user.getAge()}"></td>
             <td th:text="${user.getEmail()}"></td>
+            <td th:text="${user.getRoles().toString()}"></td>
             <td>
                 <a th:href="@{'users/edit_user/' + ${user.id}}" class="edit-btn">Edit</a>
                 <a th:href="@{'users/delete/' + ${user.id}}" class="delete-btn">Delete</a>
