@@ -18,19 +18,24 @@ public class UsersController {
         this.userService = userService;
     }
 
+    @GetMapping("/auth/register")
+    public String registration(@ModelAttribute("user") User user) {
+        return "registration";
+    }
+
+    @PostMapping("/auth/register")
+    public String registerNewUser(User user) {
+        user.addRole("ROLE_USER");
+        userService.save(user);
+        return "redirect:/login";
+    }
+
     @GetMapping()
     public String getAllUsers(Model model) {
         // получение пользователей из DAO и передача на отображение
         model.addAttribute("users", userService.getAllusers());
         return "users_page";
     }
-
-//    @GetMapping("/{id}")
-//    public String getUserById(@PathVariable("id") long id, Model model) {
-//        // Получение одного человека по id из DAO и передача его на отображение
-//        model.addAttribute("user", userService.findById(id));
-//        return "users_page";
-//    }
 
     @GetMapping("/delete/{id}")
     public String deleteUserById(@PathVariable("id") long id) {
