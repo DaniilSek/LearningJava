@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    String findByRolesContaining(String admin);
+    List<User> findByRolesContaining(String admin);
 }
