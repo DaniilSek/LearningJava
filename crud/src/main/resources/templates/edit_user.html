@@ -8,7 +8,7 @@
     form {
         max-width: 400px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 50px;
         border: 1px solid #ddd;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -60,7 +60,7 @@
 </head>
 <body>
 <h1>Edit User</h1>
-<form method="post" th:action="@{'/users/update/' + ${user.id}}" th:object="${user}">
+<form method="post" th:action="@{'/users/admin/update/' + ${user.id}}" th:object="${user}">
   <label for="name">Name:</label>
   <input type="text" id="name" th:field="*{name}" required/><br/>
   <label for="age">Age:</label>

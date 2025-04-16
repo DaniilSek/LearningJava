@@ -16,8 +16,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/register").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN") // Доступ только для администраторов
+                        .requestMatchers("/users/users_page", "/users/auth/registration").permitAll()
+                        .requestMatchers("/users/admin/**").permitAll()//.hasAuthority("ADMIN") // Доступ только для администраторов
                         //.anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults());
@@ -29,13 +29,13 @@ public class SecurityConfig {
         UserDetails user =
                 User.builder()
                         .username("user")
-                        .password("{noop}password") // Без шифрования пароля
+                        .password("user") // Без шифрования пароля
                         .authorities("ROLE_USER")
                         .build();
         UserDetails admin =
                 User.builder()
                         .username("admin")
-                        .password("{noop}adminpass") // Без шифрования пароля
+                        .password("admin") // Без шифрования пароля
                         .authorities("ROLE_ADMIN", "ROLE_USER") // Несколько ролей
                         .build();
         return new InMemoryUserDetailsManager(user, admin);

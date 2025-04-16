@@ -18,54 +18,53 @@ public class UsersController {
         this.userService = userService;
     }
 
-    @GetMapping("/auth/register")
+    @GetMapping("/auth/registration")
     public String registration(@ModelAttribute("user") User user) {
         return "registration";
     }
 
-    @PostMapping("/auth/register")
+    @PostMapping("/auth/registration")
     public String registerNewUser(User user) {
         user.addRole("ROLE_USER");
         userService.save(user);
         return "redirect:/login";
     }
 
-    @GetMapping()
+    @GetMapping("/admin/users_page")
     public String getAllUsers(Model model) {
-        // получение пользователей из DAO и передача на отображение
         model.addAttribute("users", userService.getAllusers());
         return "users_page";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/admin/delete/{id}")
     public String deleteUserById(@PathVariable("id") long id) {
         userService.deleteById(id);
-        return "redirect:/users";
+        return "redirect:/users/admin/users_page";
     }
 
-    @GetMapping("/add_user")
+    @GetMapping("/admin/add_user")
     public String showAddUserForm(@ModelAttribute("user") User user) {
         //model.addAttribute("user", new User());
         return "add_user";
     }
 
-    @PostMapping("/addNew")
+    @PostMapping("/admin/addNew")
     public String createUser(User user) {
         userService.save(user);
-        return "redirect:/users";
+        return "redirect:/users/admin/users_page";
     }
 
-    @GetMapping("/edit_user/{id}")
+    @GetMapping("/admin/edit_user/{id}")
     public String showEditUserForm(@PathVariable("id") long id, Model model) {
         model.addAttribute("user", userService.findById(id));
         return "edit_user";
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/admin/update/{id}")
     public String updateUserById(@PathVariable("id") long id, User user) {
         user.setId(id);
         userService.save(user);
-        return "redirect:/users";
+        return "redirect:/users/admin/users_page";
     }
 
 }
