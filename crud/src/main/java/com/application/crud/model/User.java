@@ -28,7 +28,6 @@ public class User {
     @Column(name = "role")
     private Set<String> roles;
 
-
     public User() {}
 
     public User(String name, Integer age, String email) {this(null, name, age, email);}
