@@ -41,3 +41,49 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(user, admin);
     }
 }
+
+// package com.application.crud.config;
+
+// import com.application.crud.model.User;
+// import com.application.crud.repositories.UserRepository;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.CommandLineRunner;
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Configuration;
+// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+// import java.util.Collections;
+// import java.util.List;
+
+// @Configuration
+// public class AppInitialization {
+
+//     @Autowired
+//     private UserRepository userRepository;
+
+// //    @Autowired
+// //    private BCryptPasswordEncoder passwordEncoder;
+
+//     @Bean
+//     CommandLineRunner initializeDatabase() {
+//         return args -> {
+//             // Проверяем, есть ли пользователь с ролью ADMIN
+//             if (userRepository.findByRolesContaining("ROLE_ADMIN").isEmpty()) {
+//                 // Создаем нового пользователя с ролью ADMIN
+//                 User admin = new User();
+//                 admin.setName("admin");
+//                 //admin.setPassword(passwordEncoder.encode("admin"));
+//                 admin.setPassword("admin");
+//                 admin.setEmail("admin@boss.ru");
+//                 admin.setRoles(Collections.singleton("ROLE_ADMIN"));
+
+//                 // Сохраняем пользователя в базу данных
+//                 userRepository.save(admin);
+//             }
+//             else {
+//                 List<User> admins = userRepository.findByRolesContaining("ROLE_ADMIN");
+//                 admins.forEach(System.out::println);
+//             }
+//         };
+//     }
+// }
