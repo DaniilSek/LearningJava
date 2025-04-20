@@ -18,18 +18,6 @@ public class UsersController {
         this.userService = userService;
     }
 
-    @GetMapping("/auth/registration")
-    public String registration(@ModelAttribute("user") User user) {
-        return "registration";
-    }
-
-    @PostMapping("/auth/registration")
-    public String registerNewUser(User user) {
-        user.addRole("ROLE_USER");
-        userService.save(user);
-        return "redirect:/login";
-    }
-
     @GetMapping("/admin/users_page")
     public String getAllUsers(Model model) {
         model.addAttribute("users", userService.getAllusers());
@@ -54,7 +42,7 @@ public class UsersController {
         return "redirect:/users/admin/users_page";
     }
 
-    @GetMapping("/admin/edit_user/{id}")
+    @GetMapping("/edit_user/{id}")
     public String showEditUserForm(@PathVariable("id") long id, Model model) {
         model.addAttribute("user", userService.findById(id));
         return "edit_user";

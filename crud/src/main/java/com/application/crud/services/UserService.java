@@ -1,37 +1,29 @@
 package com.application.crud.services;
 
+import com.application.crud.model.Role;
 import com.application.crud.model.User;
+import com.application.crud.repositories.RoleRepository;
 import com.application.crud.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-@Component
+@Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-//        if (userRepository.findByRolesContaining("ADMIN").isEmpty()) {
-//            // Создаем нового пользователя с ролью ADMIN
-//            User admin = new User();
-//            admin.setName("admin");
-//            //admin.setPassword(passwordEncoder.encode("admin"));
-//            admin.setPassword("admin");
-//            admin.setRoles(Collections.singleton("ADMIN"));
-//
-//            // Сохраняем пользователя admin в базу данных
-//            userRepository.save(admin);
-//        }
-
+        this.roleRepository = roleRepository;
     }
 
     @Transactional
@@ -44,15 +36,29 @@ public class UserService {
     }
 
     public User save(User user) {
+        Role userRole = roleRepository.findByRole("ROLE_USER");
+        Role persistedUserRole = roleRepository.findById(userRole.getId()).get();
+        if (user.getAuthorities().isEmpty()) {
+            user.setRoles(Set.of(persistedUserRole));
+        }
+        //user.setRoles(Collections.singleton(userRole));
+        //user.setPassword(user.getPassword());
+
         return userRepository.save(user);
+    }
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
 
-//    public void updateUserById() {
-//        userRepository.updateUserById();
-//    }
+    public User getUserByName(String name) {
+        if (userRepository.findByName(name) == null) {
+            return null;
+        }
+        return userRepository.findByName(name);
+    }
 
 }

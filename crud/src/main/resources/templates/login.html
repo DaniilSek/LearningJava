@@ -1,10 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-input {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #dcdcdc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease-out;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .register-link {
+            color: #007bff;
+            text-decoration: underline;
+            margin-top: 20px;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-
+<div class="login-container">
+    <h1>Login</h1>
+    <form th:action="@{/login}" method="post">
+        <div th:if="${param.error}" class="alert alert-danger">
+            Invalid email or password
+        </div>
+        <input class="form-input" type="email" name="username" placeholder="Enter your email" required>
+        <input class="form-input" type="password" name="password" placeholder="Enter your password" required>
+        <button type="submit">Login</button>
+    </form>
+    <a class="register-link" th:href="@{register}">Don't have an account? Register here</a>
+</div>
 </body>
 </html>

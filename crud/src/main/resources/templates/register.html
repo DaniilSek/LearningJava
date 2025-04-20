@@ -64,7 +64,7 @@
 </head>
 <body>
 <h1>New User Registration</h1>
-<form method="post" th:action="@{/auth/registration}" th:object="${user}">
+<form method="post" th:action="@{/auth/register}" th:object="${user}">
   <label for="name">Name:</label>
   <input type="text" id="name" th:field="*{name}" required/><br/>
   <label for="age">Age:</label>
