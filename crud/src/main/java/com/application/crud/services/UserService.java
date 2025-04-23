@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -56,11 +57,25 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
+    public void updateUserRoles(User user, List<Long> roleIds) {
+        if (roleIds == null) {
+            user.getRoles().clear();
+            return;
+        }
+        Set<Role> newRoles = roleIds.stream()
+                .map(roleId -> roleRepository.findById(roleId).orElseThrow())
+                .collect(Collectors.toSet());
+        // Очищаем текущие роли и добавляем новые
+        user.getRoles().clear();
+        user.getRoles().addAll(newRoles);
+        userRepository.save(user);
+    }
+
     public User getUserByName(String name) {
         if (userRepository.findByName(name) == null) {
             return null;
         }
         return userRepository.findByName(name);
     }
-
 }
