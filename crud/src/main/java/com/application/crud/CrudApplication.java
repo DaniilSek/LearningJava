@@ -21,7 +21,7 @@ public class CrudApplication {
 	}
 
 	@Bean
-	public CommandLineRunner demo(UserRepository userRepository, PasswordEncoder encoder, RoleRepository roleRepository) {
+	public CommandLineRunner demo(UserService userService, PasswordEncoder encoder, RoleRepository roleRepository) {
 		return args -> {
 
 			// Создаем роли, если их нет
@@ -38,7 +38,7 @@ public class CrudApplication {
 			}
 
 			// Создаем администратора
-			if (userRepository.findByEmail("admin@yandex.ru").isEmpty()) {
+			if (userService.findByEmail("admin@yandex.ru").isEmpty()) {
 				User admin = new User();
 				admin.setEmail("admin@yandex.ru");
 				admin.setPassword("admin");
@@ -48,11 +48,12 @@ public class CrudApplication {
 				Role persistedAdminRole = roleRepository.findById(adminRole.getId()).get();
 				admin.setRoles(Set.of(persistedAdminRole));
 
-				userRepository.save(admin);
-				System.out.println("Admin user created!");
+				userService.save(admin);
+				System.out.println("Admin user admin@yandex.ru created!");
 			}
 			else {
 				System.out.println("Admin (admin@yandex.ru) already exists");
+				System.out.println(userService.findByEmail("admin@yandex.ru").toString());
 			}
 		};
 	}
