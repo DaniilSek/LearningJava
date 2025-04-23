@@ -88,6 +88,7 @@
             <th>Name</th>
             <th>Age</th>
             <th>Email</th>
+            <th>Roles</th>
             <th>Actions</th>
         </tr>
         <tr th:each="user : ${users}">
@@ -95,7 +96,7 @@
             <td th:text="${user.getName()}"></td>
             <td th:text="${user.getAge()}"></td>
             <td th:text="${user.getEmail()}"></td>
-            <td th:text="${user.getRoles().toString()}"></td>
+            <td th:text="${user.getRolesString()}"></td>
             <td>
                 <a th:href="@{'edit_user/' + ${user.id}}" class="edit-btn">Edit</a>
                 <a th:href="@{'delete/' + ${user.id}}" class="delete-btn">Delete</a>
