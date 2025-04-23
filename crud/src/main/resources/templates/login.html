@@ -66,9 +66,9 @@
 <body>
 <div class="login-container">
     <h1>Login</h1>
-    <form th:action="@{/login}" method="post">
+    <form th:action="@{/auth/login}" method="post">
         <div th:if="${param.error}" class="alert alert-danger">
-            Invalid email or password
+            <p style="color: red;">Invalid email or password</p>
         </div>
         <input class="form-input" type="email" name="username" placeholder="Enter your email" required>
         <input class="form-input" type="password" name="password" placeholder="Enter your password" required>
