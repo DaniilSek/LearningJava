@@ -1,6 +1,7 @@
 package com.application.crud.config;
 
 import com.application.crud.repositories.RoleRepository;
+import com.application.crud.repositories.UserRepository;
 import com.application.crud.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,18 +19,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    public SecurityConfig(UserService userService,
+    public SecurityConfig(UserRepository userRepository,
                           RoleRepository roleRepository) {
-        this.userService = userService;
+        this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return email -> userService.findByEmail(email)
+        return email -> userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
@@ -38,14 +39,16 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/users/edit_user").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/users_page").hasRole("ADMIN")
+                        .requestMatchers("/auth/**", "/error").permitAll()
+                        .requestMatchers("/users/edit_user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/users/users_page","/users/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/login")
-                        .defaultSuccessUrl("/users/edit_user")
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/users/users_page", true)
+                        .failureUrl("/auth/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
