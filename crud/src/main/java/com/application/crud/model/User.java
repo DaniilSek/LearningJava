@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 //import org.springframework.data.annotation.Id;
 
 @Entity
@@ -85,6 +86,21 @@ public class User implements UserDetails {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+    // Геттер для доступа к коллекции ролей
+    public Set<Role> getRoles() {
+        return roles;
+    }
+    public List<String> getRoleNames() {
+        return roles.stream()
+                .map(Role::getRole)
+                .collect(Collectors.toList());
+    }
+    // Метод для получения ID текущих ролей (для чекбоксов)
+    public List<Long> getRoleIds() {
+        return this.roles.stream()
+                .map(Role::getId)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public String getPassword() {
@@ -106,6 +122,10 @@ public class User implements UserDetails {
         roles.add(new Role(role));
     }
 
+    public String getRolesString() {
+        return roles.stream().map(Role::getRole).collect(Collectors.joining(", "));
+    }
+
     // Переопределение метода toString для удобного вывода информации о пользователе
     @Override
     public String toString() {
@@ -113,6 +133,7 @@ public class User implements UserDetails {
                 ", name=" + name +
                 ", age=" + age +
                 ", email=" + email +
-                ", roles=" + roles.toString();
+                ", roles=" + getRolesString();
+
     }
 }
