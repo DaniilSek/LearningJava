@@ -1,139 +1,72 @@
-package com.application.crud.model;
+package com.application.crud.controllers;
 
-import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.application.crud.model.Role;
+import com.application.crud.model.User;
+import com.application.crud.repositories.RoleRepository;
+import com.application.crud.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-//import org.springframework.data.annotation.Id;
 
-@Entity
-@Table(name = "users")
-public class User implements UserDetails {
+@Controller
+@RequestMapping("/users")
+public class UsersController {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final UserService userService;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Column(name = "name")
-    private String name;
+    @Autowired
+    public UsersController(UserService userService, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
 
-    @Column(name = "age")
-    private Integer age;
-
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
-
-    public User() {}
-
-    public User(String name, Integer age, String email, String password) {this(null, name, age, email, password);}
-
-    public User(Long id, String name, Integer age, String email, String password) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.email = email;
-        this.password = password;
+        this.userService = userService;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
+    @GetMapping("/users_page")
+    public String getAllUsers(Model model) {
+        model.addAttribute("users", userService.getAllusers());
+        return "users_page";
     }
 
-    public Integer getAge() {
-        return age;
-    }
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
+    @GetMapping("/admin/delete/{id}")
+    public String deleteUserById(@PathVariable("id") long id) {
+        userService.deleteById(id);
+        return "redirect:/users/admin/users_page";
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
-    }
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-    // Геттер для доступа к коллекции ролей
-    public Set<Role> getRoles() {
-        return roles;
-    }
-    public List<String> getRoleNames() {
-        return roles.stream()
-                .map(Role::getRole)
-                .collect(Collectors.toList());
-    }
-    // Метод для получения ID текущих ролей (для чекбоксов)
-    public List<Long> getRoleIds() {
-        return this.roles.stream()
-                .map(Role::getId)
-                .collect(Collectors.toList());
+    @GetMapping("/admin/add_user")
+    public String showAddUserForm(@ModelAttribute("user") User user) {
+        //model.addAttribute("user", new User());
+        return "add_user";
     }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
+    @PostMapping("/admin/addNew")
+    public String createUser(User user) {
+        userService.save(user);
+        return "redirect:/users/admin/users_page";
     }
 
-    @Override
-    public String getUsername() {
-        return email; // Security использует email как username
+    @GetMapping("/edit_user/{id}")
+    public String showEditUserForm(@PathVariable("id") long id, Model model) {
+        User user = userService.findById(id);
+        model.addAttribute("user", user);
+        model.addAttribute("decodedPassword", user.getPassword());
+        List<Role> allRoles = roleRepository.findAll(); // Получаем все возможные роли
+        model.addAttribute("allRoles", allRoles);
+        return "edit_user";
     }
 
-    public void addRole(String role) {
-        if (roles == null) {
-            roles = new HashSet<>();
-        }
-        roles.add(new Role(role));
-    }
-
-    public String getRolesString() {
-        return roles.stream().map(Role::getRole).collect(Collectors.joining(", "));
-    }
-
-    // Переопределение метода toString для удобного вывода информации о пользователе
-    @Override
-    public String toString() {
-        return "id=" + id +
-                ", name=" + name +
-                ", age=" + age +
-                ", email=" + email +
-                ", roles=" + getRolesString();
-
+    @PostMapping("/admin/update/{id}")
+    public String updateUserById(@PathVariable("id") long id, User user, @RequestParam(required = false) List<Long> roleIds) {
+        user.setId(id);
+        userService.updateUserRoles(user, roleIds);
+        //userService.save(user);
+        return "redirect:/users/users_page";
     }
 }
