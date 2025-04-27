@@ -27,7 +27,9 @@
             font-size: 16px;
         }
 
-        input[type="text"], input[type="number"] {
+        input[type="text"],
+        input[type="number"],
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -39,6 +41,14 @@
         input:focus {
             border-color: #007bff;
             box-shadow: 0 0 5px rgba(0, 119, 255, 0.3);
+        }
+
+        /* Стиль для чекбоксов ролей */
+        .roles-container {
+            margin-bottom: 15px;
+        }
+        .role-checkbox {
+            margin-right: 10px;
         }
 
         /* Стиль для кнопки Submit */
@@ -63,14 +73,28 @@
 <form method="post" th:action="@{/users/admin/addNew}" th:object="${user}">
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" required/><br/>
+
     <label for="age">Age:</label>
     <input type="number" id="age" th:field="*{age}" required/><br/>
+
     <label for="email">Email:</label>
     <input type="text" id="email" th:field="*{email}" required/><br/>
-    <label for="roles">Roles:</label>
-    <input type="text" id="roles" th:field="*{roles}" required/><br/>
+
+    <div class="roles-container">
+        <label>Roles:</label>
+        <div th:each="role : ${allRoles}">
+            <input type="checkbox"
+                   th:id="${'role_' + role.id}"
+                   th:value="${role.id}"
+                   name="roleIds"
+                   class="role-checkbox"/>
+            <label th:for="${'role_' + role.id}" th:text="${role.role}"></label>
+        </div>
+    </div>
+
     <label for="password">Password:</label>
-    <input type="text" id="password" th:field="*{password}" required/><br/>
+    <input type="password" id="password" th:field="*{password}" required/><br/>
+
     <button type="submit">Submit</button>
 </form>
 </body>

@@ -40,19 +40,22 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/error").permitAll()
-                        .requestMatchers("/users/edit_user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/users/edit_user/**", "/users/menu").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/users/users_page","/users/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/users/users_page", true)
+                        .defaultSuccessUrl("/users/menu", true)
                         .failureUrl("/auth/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
+                        .logoutUrl("/logout") // POST запрос на этот URL
+                        .logoutSuccessUrl("/auth/login") // Перенаправление после выхода
+                        .invalidateHttpSession(true) // Очистка сессии
+                        .deleteCookies("JSESSIONID") // Удаление cookies
                         .permitAll()
                 )
                 .userDetailsService(userDetailsService());

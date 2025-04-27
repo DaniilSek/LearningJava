@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .menu-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .menu-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .menu-button:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
+        .logout-button {
+            background-color: #dc3545;
+        }
+
+        .profile-button {
+            background-color: #28a745;
+        }
+
+        .users-button {
+            background-color: #6c757d;
+        }
+
+        .users-button-disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+        }
+
+        .access-denied {
+            color: #dc3545;
+            margin-top: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="menu-container">
+    <h1>Menu</h1>
+
+    <a th:href="@{/profile}" class="menu-button profile-button">Profile</a>
+
+    <!-- Кнопка All Users -->
+    <div>
+        <!-- Для админов - активная кнопка -->
+        <a th:href="@{/users/admin/users_page}"
+           class="menu-button users-button"
+           sec:authorize="hasRole('ROLE_ADMIN')">
+            All Users
+        </a>
+
+    </div>
+
+    <form th:action="@{/logout}" method="post" style="margin-top: 20px;">
+        <button type="submit" class="menu-button logout-button">Logout</button>
+    </form>
+</div>
+
+</body>
+</html>

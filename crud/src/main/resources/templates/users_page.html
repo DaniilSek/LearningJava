@@ -4,83 +4,147 @@
     <meta charset="UTF-8">
     <title>User Management</title>
     <style>
-        /* Устанавливаем светло-серый фон для всей страницы */
+        /* Светло-серый фон для всей страницы */
         body {
             background-color: #f0f0f0;
-            font-family: Arial, sans-serif; /* Меняем шрифт на более удобный */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
         }
 
-        /* Улучшенные стили для таблицы */
+        /* Контейнер для заголовка и кнопок */
+        .header-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        /* Стили для таблицы */
         table {
-            width: 100%; /* Таблица занимает всю ширину контейнера */
-            border-collapse: separate; /* Разделяем границы ячеек */
-            border-spacing: 0; /* Убираем пространство между ячейками */
-            border: 1px solid #ccc; /* Тонкая сероватая граница */
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Небольшая тень для объема */
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
-            padding: 15px; /* Увеличим внутреннюю рамку для удобства чтения */
-            text-align: center; /* Центрируем текст в ячейках */
-            border: 1px solid #ddd; /* Легкая граница для ячеек */
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
         }
 
         thead {
-            background-color: #f9f9f9; /* Серый оттенок для заголовков */
+            background-color: #f9f9f9;
         }
 
         th {
-            font-weight: bold; /* Делаем заголовки жирными */
+            font-weight: bold;
         }
 
-        /* Цвет для кнопки Edit */
+        /* Стили для кнопок действий */
         .edit-btn {
-            color: white; /* Белый текст */
-            background-color: royalblue; /* Более насыщенный синий цвет */
-            text-decoration: none; /* Убираем подчеркивание */
-            padding: 8px 12px; /* Оптимальные отступы для кнопки */
-            border-radius: 5px; /* Округлим углы */
-            transition: all 0.3s ease; /* Добавим плавный переход при наведении */
+            color: white;
+            background-color: royalblue;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: none;
         }
 
         .edit-btn:hover {
-            background-color: darkblue; /* Темно-синий цвет при наведении */
+            background-color: darkblue;
         }
 
-        /* Цвет для кнопки Delete */
+        /* Стиль для кнопки Delete */
         .delete-btn {
-            color: white; /* Белый текст */
-            background-color: firebrick; /* Насыщенно-красный цвет */
-            text-decoration: none; /* Убираем подчеркивание */
-            padding: 8px 12px; /* Оптимальные отступы для кнопки */
-            border-radius: 5px; /* Округлим углы */
-            transition: all 0.3s ease; /* Добавим плавный переход при наведении */
+            color: white;
+            background-color: firebrick;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
         }
 
-        .delete-btn:hover {
-            background-color: maroon; /* Темно-красный цвет при наведении */
+        /* Стиль для кнопки Logout */
+        .logout-btn {
+            padding: 8px 12px;
+            color: white;
+            background-color: firebrick;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1em;
+            line-height: 1.5;
+            height: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Добавим немного стиля для кнопки "Add New User" */
+        .delete-btn:hover, .logout-btn:hover {
+            background-color: maroon;
+        }
+
+        /* Стили для кнопки Add New User */
         .add-new-btn {
-            position: absolute; /* Абсолютное позиционирование */
-            top: 30px; /* Смещение от верхнего края */
-            right: 40px; /* Смещение от правого края */
-            padding: 8px 12px; /* Отступы внутри кнопки */
-            background-color: mediumseagreen; /* Приятный зеленый цвет */
-            color: white; /* Белый текст */
-            text-decoration: none; /* Убираем подчеркивание */
-            border-radius: 5px; /* Округлим углы */
-            transition: all 0.3s ease; /* Плавный переход при наведении */
+            padding: 8px 12px;
+            color: white;
+            background-color: mediumseagreen;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1em;
+            line-height: 1.5;
+            height: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .add-new-btn:hover {
-            background-color: seagreen; /* Темно-зеленый цвет при наведении */
+            background-color: seagreen;
+        }
+
+        /* Стили для верхних кнопок */
+        .action-buttons {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Убираем стандартные стили кнопки */
+        button {
+            border: none;
+            outline: none;
+            background: none;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Выравнивание формы кнопки Logout */
+        .action-buttons form {
+            display: flex;
+            align-items: center;
         }
     </style>
 </head>
 <body>
-<h1 style="position: relative;">User List</h1>
+<div class="header-container">
+    <h1>User List</h1>
+    <div class="action-buttons">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+        <a href="add_user" class="add-new-btn">Add New User</a>
+    </div>
+</div>
+
 <div th:if="${not #lists.isEmpty(users)}">
     <table>
         <tr>
@@ -104,6 +168,5 @@
         </tr>
     </table>
 </div>
-<a href="add_user" class="add-new-btn">Add New User</a>
 </body>
 </html>
