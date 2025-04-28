@@ -49,6 +49,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public User updateProfile(User existingUser, User updatedUser) {
+        existingUser.setName(updatedUser.getName());
+        existingUser.setAge(updatedUser.getAge());
+        existingUser.setEmail(updatedUser.getEmail());
+
+        // Обновляем пароль только если он был изменен
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        return userRepository.save(existingUser);
+    }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
