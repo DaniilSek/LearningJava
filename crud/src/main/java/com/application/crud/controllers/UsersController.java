@@ -32,6 +32,24 @@ public class UsersController {
         return "menu";
     }
 
+    @GetMapping("/profile")
+    public String showProfileForm(Model model, Principal principal) {
+        String email = principal.getName();
+        User user = userService.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        model.addAttribute("user", user);
+        return "profile";
+    }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(@ModelAttribute("user") User user, Principal principal) {
+        User existingUser = userService.findByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        userService.updateProfile(existingUser, user);
+        return "redirect:/users/profile?success";
+    }
+
     @GetMapping("/admin/users_page")
     public String getAllUsers(Model model) {
         model.addAttribute("users", userService.getAllusers());
