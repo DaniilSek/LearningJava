@@ -40,7 +40,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/error").permitAll()
-                        .requestMatchers("/users/edit_user/**", "/users/menu").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/users/edit_user/**", "/users/menu", "/users/profile/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/users/users_page","/users/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
