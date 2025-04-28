@@ -103,6 +103,6 @@ public class UsersController {
         user.setId(id);
         userService.updateUserRoles(user, roleIds);
         //userService.save(user);
-        return "redirect:/users/users_page";
+        return "redirect:/users/admin/users_page";
     }
 }
