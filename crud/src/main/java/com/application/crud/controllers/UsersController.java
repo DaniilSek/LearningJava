@@ -88,7 +88,7 @@ public class UsersController {
         return "redirect:/users/admin/users_page";
     }
 
-    @GetMapping("/edit_user/{id}")
+    @GetMapping("/admin/edit_user/{id}")
     public String showEditUserForm(@PathVariable("id") long id, Model model) {
         User user = userService.findById(id);
         model.addAttribute("user", user);
