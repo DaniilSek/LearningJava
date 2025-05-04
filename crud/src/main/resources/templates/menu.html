@@ -6,72 +6,75 @@
     <title>Menu</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #f0f0f0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
         }
 
         .menu-container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 350px;
+          background-color: #ffffff;
+          padding: 40px;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          text-align: center;
+          width: 350px;
         }
 
         h1 {
-            color: #333;
-            margin-bottom: 30px;
+          color: #333;
+          margin-bottom: 30px;
         }
 
         .menu-button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            text-decoration: none;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease-out;
+          display: block;
+          width: 100%;
+          padding: 12px;
+          margin-bottom: 15px;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.2s ease-out;
+          box-sizing: border-box; /* Добавлено для правильного расчёта размеров */
+          line-height: 1.5; /* Добавлено для выравнивания текста */
+        }
+
+        /* Стиль для ссылок-кнопок */
+        a.menu-button {
+          text-decoration: none;
+          display: inline-flex; /* Изменено для лучшего выравнивания */
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Стиль для кнопок */
+        button.menu-button {
+          -webkit-appearance: none; /* Убираем стандартные стили в Safari */
+          -moz-appearance: none; /* Убираем стандартные стили в Firefox */
         }
 
         .menu-button:hover {
-            transform: scale(1.02);
-            opacity: 0.9;
+          transform: scale(1.02);
+          opacity: 0.9;
         }
 
         .logout-button {
-            background-color: #dc3545;
+          background-color: #dc3545;
+          margin-top: 20px;
         }
 
         .profile-button {
-            background-color: #28a745;
+          background-color: #28a745;
         }
 
         .users-button {
-            background-color: #6c757d;
-        }
-
-        .users-button-disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-        }
-
-        .access-denied {
-            color: #dc3545;
-            margin-top: 5px;
-            font-weight: bold;
-            font-size: 14px;
-            height: 20px;
+          background-color: #6c757d;
         }
     </style>
 </head>
@@ -79,140 +82,36 @@
 <div class="menu-container">
     <h1>Menu</h1>
 
-    <a th:href="@{profile}" class="menu-button profile-button">Profile</a>
+<!--    <div>-->
+<!--        <p>Текущий пользователь: <span sec:authentication="name"></span></p>-->
+<!--        <p>Роли: <span sec:authentication="principal.authorities"></span></p>-->
+<!--    </div>-->
 
-    <!-- Кнопка All Users -->
-    <div>
-        <!-- Для админов - активная кнопка -->
-        <a th:href="@{/users/admin/users_page}"
-           class="menu-button users-button"
-           sec:authorize="hasRole('ROLE_ADMIN')">
-            All Users
-        </a>
-
+    <div sec:authorize="isAuthenticated()">
+        <!-- Эта часть будет видна только аутентифицированным пользователям -->
+        <p>Текущий пользователь: <span sec:authentication="name"></span></p>
+        <p>Роли: <span sec:authentication="principal.authorities"></span></p>
+    </div>
+    <div sec:authorize="!isAuthenticated()">
+        <p>Вы не аутентифицированы</p>
     </div>
 
-    <form th:action="@{/logout}" method="post" style="margin-top: 20px;">
+    <!-- Блок отладочной информации -->
+    <div sec:authorize="isAuthenticated()">
+        <p>Email из модели: <span th:text="${user?.email}"></span></p>
+    </div>
+
+    <a th:href="@{profile}" class="menu-button profile-button">Profile</a>
+
+    <!-- Кнопка All Users только для админов -->
+    <a th:href="@{admin/users_page}"
+       class="menu-button users-button"
+       sec:authorize="hasRole('ROLE_ADMIN')">
+        All Users
+    </a>
+
+    <form th:action="@{/logout}" method="post">
         <button type="submit" class="menu-button logout-button">Logout</button>
     </form>
 </div>
-
-<!-- </body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>User Profile</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .profile-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="number"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        .success-message {
-            color: #28a745;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .roles-info {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-        }
-    </style>
-</head>
-<body>
-<div class="profile-container">
-    <h1>Your Profile</h1>
-
-    <div th:if="${param.success}" class="success-message">
-        Profile updated successfully!
-    </div>
-
-    <form th:action="@{/users/profile/update}" method="post" th:object="${user}">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" th:field="*{name}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="age">Age:</label>
-            <input type="number" id="age" th:field="*{age}">
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" th:field="*{email}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="password">New Password:</label>
-            <input type="password" id="password" th:field="*{password}">
-        </div>
-
-        <div class="roles-info">
-            <p><strong>Your roles:</strong> <span th:text="${user.getRolesString()}"></span></p>
-        </div>
-
-        <button type="submit" class="btn">Update Profile</button>
-    </form>
-</div>
 </body>
-</html> -->

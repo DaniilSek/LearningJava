@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .success-message {
+            color: #28a745;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .roles-info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="profile-container">
+    <h1>Your Profile</h1>
+
+    <div sec:authorize="isAuthenticated()">
+        <!-- Эта часть будет видна только аутентифицированным пользователям -->
+        <p>Текущий пользователь: <span sec:authentication="name"></span></p>
+        <p>Роли: <span sec:authentication="principal.authorities"></span></p>
+    </div>
+    <div sec:authorize="!isAuthenticated()">
+        <p>Вы не аутентифицированы</p>
+    </div>
+
+    <div th:if="${param.success}" class="success-message">
+        Profile updated successfully!
+    </div>
+
+    <form th:action="@{/users/profile/update}" method="post" th:object="${user}">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" th:field="*{age}">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">New Password:</label>
+            <input type="password" id="password" th:field="*{password}">
+        </div>
+
+        <div class="roles-info">
+            <p><strong>Your roles:</strong> <span th:text="${user.getRolesString()}"></span></p>
+        </div>
+
+        <button type="submit" class="btn">Update Profile</button>
+    </form>
+</div>
+</body>
+</html>
