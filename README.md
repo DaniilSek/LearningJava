@@ -42,6 +42,24 @@ x = 20; // тут будет ошибка компиляции
 Метод equals() используется для сравнения двух объектов по содержимому (логическому равенству).
 Метод hashCode() вычисляет уникальный числовой идентификатор объекта. 
 Если два объекта равны согласно equals(), то их hashCode() обязательно должен возвращать одно и то же значение. Когда переопределяешь для какого-то класса equals, то и hashCode необходимо переопределить.
+```Java
+public class Person {
+    private String name;
+    private int age;
+    
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Person)) return false;
+        
+        Person other = (Person) obj;
+        return Objects.equals(name, other.name) && age == other.age;
+    }
+
+    public int hashCode() {
+    return Objects.hash(name, age);
+}
+}
+```
 
 ## 6. Перечислите три ключевых преимущества использования Collection Framework в Java.
 Collection Framework предоставляет единый набор удобных интерфейсов List, Set, Map, Queue.
