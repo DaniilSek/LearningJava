@@ -59,6 +59,14 @@ public class Person {
     return Objects.hash(name, age);
 }
 }
+
+HashMap<Person, Integer> map = new HashMap<>();
+Person p1 = new Person("Alice", 30);
+Person p2 = new Person("Alice", 30);
+
+map.put(p1, 1);
+System.out.println(map.get(p2)); // 1
+System.out.println(p1.equals(p2)); // true
 ```
 
 ## 6. Перечислите три ключевых преимущества использования Collection Framework в Java.
