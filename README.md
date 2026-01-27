@@ -9,12 +9,12 @@ class Animal {
 
 class Dog extends Animal {
     @Override
-public void whatAnimalSay() { System.out.println("Гав"); }
+    public void whatAnimalSay() { System.out.println("Гав"); }
 }
 
 class Cat extends Animal {
     @Override
-public void whatAnimalSay() { System.out.println("Мяу"); }
+    public void whatAnimalSay() { System.out.println("Мяу"); }
 }
 
 // Использование полиморфизма:
