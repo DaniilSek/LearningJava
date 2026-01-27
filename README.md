@@ -279,13 +279,131 @@ public static void main(String[] args) throws IOException, ClassNotFoundExceptio
 ## 17. Что такое аннотации в Java? Зачем они используются? Приведите пару примеров стандартных аннотаций и расскажите, как их применять.
 Аннотации — это специальные метки, которые можно ставить на классы, методы, поля, параметры и другие элементы кода, это способ "дать указания" коду без изменения его структуры.
 Примеры:
-Из стандартного пакета **Java**
-**@Override** - переопределения метода
-**@Deprecated** - метод или класс устарели и не рекомендуются к использованию
-**@FunctionalInterface** - функциональный интерфейс (интерфейс с одним методом)
-Из пакета **Lombok**
-**@Getter** - генерирует геттеры
-**@Setter** - генерирует сеттеры
-**@AllArgsConstructor** - конструктор со всеми полями
-**@NoArgsConstructor** - пустой конструктор
-**@Data** - комбинирует несколько аннотаций (**@Getter, @Setter, @ToString, @EqualsAndHashCode, @RequiredArgsConstructor**)
+1. Из стандартного пакета **Java**:
+```Java
+@Override - переопределения метода.
+@Deprecated - метод или класс устарели и не рекомендуются к использованию.
+@FunctionalInterface - функциональный интерфейс (интерфейс с одним методом).
+```
+3. Из пакета **Lombok**:
+```Java
+ @Getter - генерирует геттеры.
+ @Setter - генерирует сеттеры.
+ @AllArgsConstructor - конструктор со всеми полями.
+ @NoArgsConstructor - пустой конструктор.
+ @Data - комбинирует несколько аннотаций (@Getter, @Setter, @ToString, @EqualsAndHashCode, @RequiredArgsConstructor).
+```
+
+## 18. Какой цикл управляет жизненным циклом сервлетов в веб-приложениях Java EE? Перечислите этапы жизненного цикла сервлета и объясните их назначение.
+В веб-приложениях Java EE жизненным циклом сервлетов управляет сервлет-контейнер, он полностью создаёт, управляет и уничтожает экземпляры сервлетов. Каждый сервлет проходит через следующие стадии:
+1. Инициализация (init()) - при первом запросе к сервлету или при запуске приложения. Контейнер вызывает метод init(ServletConfig config). Создаётся один экземпляр сервлета (по умолчанию — один на весь контекст). Сервлет может инициализировать ресурсы: подключение к БД, кэш, конфигурацию.
+```Java
+public class MyServlet extends HttpServlet { 
+    private String appConfig;
+    
+    @Override public void init() throws ServletException { 
+        ServletConfig config = getServletConfig(); 
+        appConfig = config.getInitParameter("config"); 
+        System.out.println("Сервлет инициализирован с: " + appConfig); 
+    }
+}
+```
+2. Обработка запросов (service()) - при каждом HTTP-запросе к сервлету (GET, POST, PUT). Контейнер вызывает метод service(HttpServletRequest req, HttpServletResponse resp). Метод service() автоматически определяет тип запроса и перенаправляет его, например:doGet() → для GET, doPost() → для POST.
+```Java
+@Override
+protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    resp.setContentType("text/html");
+    PrintWriter out = resp.getWriter();
+    out.println("<h1>Hello from Servlet!</h1>");
+}
+```
+3. Уничтожение (destroy()) - перед тем как контейнер выгрузит сервлет из памяти, обычно при остановке или обновлении приложения. Вызывается метод destroy(). Здесь нужно освободить ресурсы: закрыть соединения с БД, остановить потоки, сохранить состояние.
+```Java
+@Override
+public void destroy() {
+    System.out.println("Сервлет уничтожается. Освобождаем ресурсы...");    
+    // Например: dbConnection.close();
+}
+```
+
+Диаграмма жизненного цикла:
+[Загрузка сервлета]
+↓ init() → один раз
+↓ service() → многократно (на каждый запрос)
+↓ destroy() → один раз (при остановке)
+
+Пример полного сервлета:
+```Java
+public class HelloServlet extends HttpServlet {
+    private String message;
+
+    @Override
+    public void init() throws ServletException {
+        message = "Привет от сервлета!";
+        System.out.println("Инициализация завершена");
+}
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        resp.setContentType("text/html");
+        PrintWriter out = resp.getWriter();
+        out.println("<html><body>");
+        out.println("<h1>" + message + "</h1>");
+        out.println("</body></html>");
+    }
+
+    @Override
+    public void destroy() {
+        System.out.println("Сервлет уничтожен.");
+        message = null;
+    }
+}
+```
+
+# Практика.
+
+## 1. Напишите программу, которая находит максимальное число в массиве целых чисел.
+```Java
+import java.util.Arrays;
+
+class Main {
+    public static int findMax(int[] arr) {
+        if (arr.length == 0) {
+            throw new IllegalArgumentException("Array cannot be empty");
+        }
+        
+        int maxValue = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > maxValue) {
+                maxValue = arr[i];
+            }
+        }
+        return maxValue;
+    }
+
+    public static void main(String[] args) {
+        int[] numbers = {3, 5, 1, 8, 2};
+        System.out.println(findMax(numbers)); // Ответ: 8
+    }
+}
+```
+
+## 2. Реализуйте метод, который возвращает отсортированный список строк в алфавитном порядке.
+```Java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+class Main {
+    public static List<String> sortStrings(List<String> strings) {
+        Collections.sort(strings);
+        return strings;
+    }
+
+    public static void main(String[] args) {
+        List<String> words = new ArrayList<>(Arrays.asList("apple", "banana", "cherry"));
+        System.out.println(sortStrings(words)); // Output: ["apple", "banana", "cherry"]
+    }
+}
+```
