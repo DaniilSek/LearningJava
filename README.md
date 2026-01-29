@@ -364,6 +364,7 @@ public class HelloServlet extends HttpServlet {
 # Практика.
 
 ## 1. Напишите программу, которая находит максимальное число в массиве целых чисел.
+Решение:
 ```Java
 import java.util.Arrays;
 
@@ -390,6 +391,7 @@ class Main {
 ```
 
 ## 2. Реализуйте метод, который возвращает отсортированный список строк в алфавитном порядке.
+Решение:
 ```Java
 import java.util.ArrayList;
 import java.util.Collections;
@@ -406,4 +408,182 @@ class Main {
         System.out.println(sortStrings(words)); // Output: ["apple", "banana", "cherry"]
     }
 }
+```
+## 3. Вам дано приложение электронной библиотеки, где пользователи могут искать книги по названию и авторам. Необходимо написать метод, который ищет книгу по фрагменту названия или фамилии автора. Библиотека представлена списком книг (класс Book), каждая книга имеет название (title) и автора (author).
+Требуется реализовать метод поиска с учётом следующего поведения:
+Поиск нечувствителен к регистру символов.
+Пользователь вводит фрагмент текста, который может содержать части названия или имени автора.
+Результат должен включать все книги, содержащие указанный фрагмент в названии или фамилии автора.
+Класс Book:
+```Java
+public class Book {
+    private String title;
+    private String author;
+
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                '}';
+    }
+}
+```
+Решение:
+```Java
+    public List<Book> searchBooksByFragment(List<Book> books, String fragment) {
+        // Реализуйте метод поиска здесь
+        if (books == null || books.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        List<Book> resultList = new ArrayList<>();
+        for (Book book : books) {
+
+            String searchIn = (book.getTitle() + book.getAuthor()).toLowerCase().replaceAll("\\s+", "");
+            fragment = fragment.toLowerCase().replaceAll("\\s+", "");
+
+            if (searchIn.contains(fragment)) {
+                resultList.add(book);
+            }
+        }
+        return resultList;
+    }
+```
+
+## 4. Реализуйте метод, который группирует студентов по факультетам и выводит средний балл успеваемости каждого студента в рамках своего факультета. Студенты представлены в списке объектов класса Student, содержащего следующую структуру:
+Класс Student:
+```Java
+public class Student {
+    private String fullName;
+    private String faculty;
+    private double averageScore;
+
+    public Student(String fullName, String faculty, double averageScore) {
+        this.fullName = fullName;
+        this.faculty = faculty;
+        this.averageScore = averageScore;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public double getAverageScore() {
+        return averageScore;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "fullName='" + fullName + '\'' +
+                ", faculty='" + faculty + '\'' +
+                ", averageScore=" + averageScore +
+                '}';
+    }
+}
+```
+Решение:
+```Java
+    public Map<String, Double> getAvgScoreByFaculty(List<Student> students) {
+        if (students == null || students.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return students.stream()
+                .collect(Collectors.groupingBy(
+                        Student::getFaculty,
+                        Collectors.averagingDouble(Student::getAverageScore)));
+
+    }
+```
+
+## 5. Необходимо разработать метод, который вычисляет суммарную стоимость заказов, находящихся в статусе "Ожидает оплаты" ("WAITING_FOR_PAYMENT"). Заказ представлен объектом класса Order, который содержит следующую структуру:
+Класс Orders:
+```Java
+public class Order {
+    private Long id;
+    private BigDecimal totalAmount; // Общая сумма заказа
+    private Status status;          // Текущий статус заказа
+
+    public enum Status {
+        WAITING_FOR_PAYMENT, SHIPPED, DELIVERED, RETURNED
+    }
+
+    public Order(Long id, BigDecimal totalAmount, Status status) {
+        this.id = id;
+        this.totalAmount = totalAmount;
+        this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", totalAmount=" + totalAmount +
+                ", status=" + status +
+                '}';
+    }
+}
+```
+Решение:
+```Java
+    // Для подсчета суммы только по статусу WAITING_FOR_PAYMENT
+    public BigDecimal getWaitingForPaymentSum(List<Order> orders) {
+
+        if (orders == null || orders.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        return orders.stream()
+                .filter(order -> order.getStatus().equals(Order.Status.WAITING_FOR_PAYMENT))
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    // Для подсчета сумм в разрезе всех статусов и вывода в Map
+    public Map<Order.Status, BigDecimal> getOrdersByStatusSum(List<Order> orders) {
+
+        if (orders == null || orders.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return orders.stream()
+                .collect(Collectors.groupingBy(
+                        Order::getStatus,
+                        Collectors.collectingAndThen(
+                                Collectors.reducing(BigDecimal.ZERO, Order::getTotalAmount, BigDecimal::add),
+                                sum -> sum.setScale(2, RoundingMode.HALF_UP)
+                        )));
+    }
 ```
