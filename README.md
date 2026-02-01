@@ -77,7 +77,7 @@ System.out.println(map.get(p2)); // 1
 System.out.println(p1.equals(p2)); // true
 ```
 
-## 6. Перечислите три ключевых преимущества использования Collection Framework в Java.
+## 6. Перечислите преимущества использования Collection Framework в Java.
 **Collection Framework** предоставляет единый набор удобных интерфейсов **List, Set, Map, Queue**.
 Легко менять реализацию без изменения логики: например, **ArrayList → LinkedList**, **HashMap -> LinkedHashMap**.
 Все представленные типы данных имеют реализации с добавлением и удалением объектов внутри себя, а также поиск элементов.
