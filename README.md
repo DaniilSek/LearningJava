@@ -587,3 +587,59 @@ public class Order {
                         )));
     }
 ```
+
+## 5. Разработайте метод, который берет список записей банковских транзакций и вычисляет баланс счета клиента. Каждая запись транзакции представлена объектом класса Transaction, имеющим следующую структуру:
+Класс Transaction:
+```Java
+public class Transaction {
+    private LocalDateTime timestamp; // Время транзакции
+    private BigDecimal amount;       // Сумма транзакции (+/-)
+    private Type type;               // Тип транзакции (DEPOSIT или WITHDRAWAL)
+
+    enum Type {
+        DEPOSIT, WITHDRAWAL
+    }
+
+    public Transaction(LocalDateTime timestamp, BigDecimal amount, Type type) {
+        this.timestamp = timestamp;
+        this.amount = amount;
+        this.type = type;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "timestamp=" + timestamp +
+                ", amount=" + amount +
+                ", type=" + type +
+                '}';
+    }
+}
+```
+Решение:
+```Java
+    public BigDecimal getBalance(List<Transaction> transactions) {
+
+        if (transactions == null || transactions.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        return transactions.stream()
+                .map(transaction -> transaction.getType() == Transaction.Type.DEPOSIT ? transaction.getAmount() : transaction.getAmount().negate())
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
+
+    }
+```
