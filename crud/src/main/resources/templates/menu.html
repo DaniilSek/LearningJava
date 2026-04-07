@@ -82,22 +82,21 @@
 <div class="menu-container">
     <h1>Menu</h1>
 
-<!--    <div>-->
-<!--        <p>Текущий пользователь: <span sec:authentication="name"></span></p>-->
-<!--        <p>Роли: <span sec:authentication="principal.authorities"></span></p>-->
-<!--    </div>-->
+    <!-- Диагностическая информация -->
+    <div>
+        <p>Principal: <span th:text="${#authentication?.principal}"></span></p>
+        <p>Authenticated: <span th:text="${#authentication?.isAuthenticated()}"></span></p>
+        <p>Session: <span th:text="${session}"></span></p>
+    </div>
 
     <div sec:authorize="isAuthenticated()">
         <!-- Эта часть будет видна только аутентифицированным пользователям -->
         <p>Текущий пользователь: <span sec:authentication="name"></span></p>
         <p>Роли: <span sec:authentication="principal.authorities"></span></p>
+        <p>Email из модели: <span th:text="${user?.email}"></span></p>
     </div>
     <div sec:authorize="!isAuthenticated()">
         <p>Вы не аутентифицированы</p>
-    </div>
-
-    <!-- Блок отладочной информации -->
-    <div sec:authorize="isAuthenticated()">
         <p>Email из модели: <span th:text="${user?.email}"></span></p>
     </div>
 

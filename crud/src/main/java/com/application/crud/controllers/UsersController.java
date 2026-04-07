@@ -31,6 +31,7 @@ public class UsersController {
     @GetMapping("/menu")
     public String showMenuForm(Model model, Principal principal) {
         String email = principal.getName();
+
         User user = userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         model.addAttribute("user", user);
