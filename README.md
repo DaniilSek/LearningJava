@@ -435,7 +435,8 @@ public static void main(String[] args) throws IOException, ClassNotFoundExceptio
 public class MyServlet extends HttpServlet { 
     private String appConfig;
     
-    @Override public void init() throws ServletException { 
+    @Override
+public void init() throws ServletException { 
         ServletConfig config = getServletConfig(); 
         appConfig = config.getInitParameter("config"); 
         System.out.println("Сервлет инициализирован с: " + appConfig); 
@@ -493,6 +494,83 @@ public class HelloServlet extends HttpServlet {
         message = null;
     }
 }
+```
+
+## 19. Расскажите про Stream API.
+Это способ обработки данных в Java. Он позволяет описывать, что нужно сделать с данными (например, «отфильтровать и посчитать»), а не как это делать. Весь процесс работы делется на промежуточные операции и терминальные операции.  
+**Промежуточные операции** - сами по себе они ничего не делают, они просто настраивают логику. Их главная особенность — **ленивость** (Laziness). Код не выполнится, пока не будет вызвана терминальная операция.  
+Примеры промежуточных операций:  
+```.filter()``` - фильтрация. Пропускает только те элементы, которые удовлетворяют условию;  
+```.map()``` - преобразование. Берёт элемент и превращает его в другой объект;  
+```.flatMap()``` - преобразование со «сплющиванием». Берёт элемент, превращает его в поток, и объединяет все эти потоки в один;  
+```.sorted()``` - сортировка;  
+```.distinct()``` - удаление дубликатов;  
+```.peek()``` -  для отладки. Позволяет посмотреть на элемент, не меняя его.  
+**Терминальные операции** - запускают всю цепочку промежуточных операций, обрабатывают данные и возвращают конечный результат или побочный эффект (например, вывод на экран). После терминальной операции поток считается **«использованным»** и закрывается.  
+Примеры терминальных операций:  
+```.forEach()``` -  перебор элементов (например, вывод в консоль);  
+```.collect()``` - сбор результата в коллекцию (List, Set, Map) или строку;  
+```.count()``` - подсчёт количества элементов;  
+```.findFirst()/.findAny()``` - поиск элемента;  
+```.reduce()``` - свёртка элементов в одно значение (например, сумма);  
+```.anyMatch()/.allMatch()/.noneMatch()``` - проверка условий на всём потоке.  
+
+Примеры:  
+```Java
+List<String> words = List.of("Привет", "мир", "Java");
+
+// Получить список длин этих слов
+// map берёт одно слово и превращает его в одно число (длину)
+List<Integer> lengths = words.stream()
+    .map(String::length) // "Привет" -> 6, "мир" -> 3, "Java" -> 4
+    .collect(Collectors.toList());
+// Результат: [6, 3, 4]
+
+// Получить список всех букв из всех слов
+// flatMap берёт слово, превращает его в поток букв, и объединяет все буквы в один общий поток
+List<String> letters = words.stream()
+    .flatMap(word -> Arrays.stream(word.split(""))) // "Привет" -> ["П","р","и","в","е","т"]
+    .collect(Collectors.toList());
+// Результат: ["П", "р", "и", "в", "е", "т", "м", "и", "р", "J", "a", "v", "a"]
+```
+
+```Java
+class User {
+    String name;
+    int age;
+    public User(String name, int age) { this.name = name; this.age = age; }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+}
+List<User> users = List.of(
+    new User("Иван", 25),
+    new User("Анна", 30),
+    new User("Петр", 25)
+);
+
+// Собрать всех пользователей в List
+List<String> names = users.stream()
+    .map(User::getName) // Преобразуем User -> String (имя)
+    .collect(Collectors.toList());
+// names -> ["Иван", "Анна", "Петр"]
+
+// Собрать всех пользователей в Map
+// ключ — имя, а значение — возраст
+// если имена повторяются - оставляем старое значение
+Map<String, Integer> nameToAge = users.stream()
+    .collect(Collectors.toMap(
+        User::getName,      // Ключ: имя
+        User::getAge,       // Значение: возраст
+        (existingValue, newValue) -> existingValue // Если ключи совпали, оставить старое
+    ));
+// Результат: {"Иван"=25, "Анна"=30, "Петр"=25}
+
+// Вывод в консоль пользователей старше 25 лет
+users.stream()
+    .filter(user -> user.getAge() > 25) // Промежуточная операция: фильтруем по возрасту
+    .forEach(user -> System.out.println(user.getName())); // Терминальная: выводим имя
+// В консоль выведется:
+// Анна
 ```
 
 # Практика.
