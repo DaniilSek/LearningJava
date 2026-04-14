@@ -573,6 +573,238 @@ users.stream()
 // Анна
 ```
 
+## 20. Объясните принципы SOLID и приведите примеры на Java.
+**SOLID** — это акроним, объединяющий пять основных принципов объектно-ориентированного программирования и проектирования. Эти принципы помогают создавать код, который легко поддерживать, расширять и тестировать.
+
+**S — Single Responsibility Principle** (Принцип единственной ответственности)  
+Определение: У класса должна быть только одна причина для изменения. Класс должен отвечать за выполнение только одной задачи (или иметь одну зону ответственности).
+
+Пример: Представим класс, который одновременно работает с базой данных и отправляет отчеты. Это плохая практика. Если изменится формат отчета или структура БД, придется менять один и тот же класс.
+
+**Плохой пример (Нарушение SRP)**:
+```Java
+// Этот класс делает слишком много: и сохраняет данные, и отправляет email
+class UserManager {
+    public void registerUser(String name) {
+        // Логика сохранения в БД (Зона ответственности 1)
+        System.out.println("Сохраняем пользователя " + name + " в базу данных.");
+
+        // Логика отправки письма (Зона ответственности 2)
+        System.out.println("Отправляем приветственное письмо на email.");
+    }
+}
+```
+**Хороший пример (Соблюдение SRP)**:  
+Разделим обязанности на два разных класса.
+```Java
+// Класс отвечает ТОЛЬКО за работу с базой данных
+class UserRepository {
+    public void save(String name) {
+        System.out.println("Сохраняем пользователя " + name + " в базу данных.");
+    }
+}
+
+// Класс отвечает ТОЛЬКО за отправку писем
+class EmailService {
+    public void sendWelcomeEmail(String name) {
+        System.out.println("Отправляем приветственное письмо пользователю " + name);
+    }
+}
+
+// Класс UserManager теперь просто координирует работу других классов
+class UserManager {
+    private UserRepository repo;
+    private EmailService emailer;
+
+    public UserManager(UserRepository repo, EmailService emailer) {
+        this.repo = repo;
+        this.emailer = emailer;
+    }
+
+    public void registerUser(String name) {
+        repo.save(name);
+        emailer.sendWelcomeEmail(name);
+    }
+}
+```
+
+**O — Open/Closed Principle** (Принцип открытости/закрытости)  
+Определение: Программные сущности (классы, модули) должны быть открыты для расширения, но закрыты для модификации. Вы должны иметь возможность добавлять новую функциональность, не изменяя существующий код.
+
+Пример: Допустим, у нас есть класс, который рассчитывает площадь фигур. Если мы захотим добавить расчет площади треугольника, нам придется менять код этого класса (добавлять ```if-else```). Это нарушение принципа.
+
+**Плохой пример (Нарушение OCP)**:
+```Java
+class AreaCalculator {
+    public double calculate(Object shape) {
+        if (shape instanceof Square) {
+            Square s = (Square) shape;
+            return s.getSide() * s.getSide();
+        } else if (shape instanceof Circle) {
+            Circle c = (Circle) shape;
+            return Math.PI * c.getRadius() * c.getRadius();
+        }
+        // Чтобы добавить Треугольник, нужно будет залезть в этот метод и дописать код!
+        return 0;
+    }
+}
+```
+
+**Хороший пример (Соблюдение OCP)**:  
+Используем полиморфизм через интерфейс. Теперь для добавления новой фигуры достаточно создать новый класс, не трогая ```AreaCalculator```
+```Java
+// Интерфейс определяет контракт (расширяемость)
+interface Shape {
+    double getArea();
+}
+
+// Реализации интерфейса (закрыты для изменений, но выполняют свою задачу)
+class Square implements Shape {
+    private double side;
+    public Square(double side) { this.side = side; }
+    @Override public double getArea() { return side * side; }
+}
+
+class Circle implements Shape {
+    private double radius;
+    public Circle(double radius) { this.radius = radius; }
+    @Override public double getArea() { return Math.PI * radius * radius; }
+}
+
+// Класс-клиент закрыт для модификации. Ему все равно, какая именно фигура.
+class AreaCalculator {
+    public double calculate(Shape shape) {
+        return shape.getArea(); // Просто вызываем метод интерфейса
+    }
+}
+```
+
+**L — Liskov Substitution Principle** (Принцип подстановки Барбары Лисков)  
+Определение: Объекты в программе должны быть заменяемы на экземпляры их подтипов без изменения правильности выполнения программы. Наследник должен дополнять поведение родителя, а не противоречить ему.
+
+Пример: Класс ```Bird``` умеет летать (```fly()```). Если мы создадим наследника ```Ostrich``` (Страус), который не умеет летать и выбрасывает исключение при вызове ```fly()```, это нарушит логику программы. Код, ожидающий птицу, сломается при получении страуса.
+
+**Плохой пример (Нарушение LSP)**:
+```Java
+class Bird {
+    public void fly() {
+        System.out.println("Птица летит");
+    }
+}
+
+// Страус - птица, но он не летает. Вызов fly() приведет к ошибке.
+class Ostrich extends Bird {
+    @Override
+    public void fly() {
+        throw new UnsupportedOperationException("Страусы не летают!");
+    }
+}
+```
+
+**Хороший пример (Соблюдение LSP)**:  
+Нужно пересмотреть иерархию. Не все птицы летают. Лучше выделить интерфейс ```Flyable```.
+```Java
+interface Flyable {
+    void fly();
+}
+
+// Базовый класс Bird без метода fly()
+abstract class Bird { }
+
+// Летающие птицы реализуют интерфейс Flyable
+class Sparrow extends Bird implements Flyable {
+    @Override public void fly() { System.out.println("Воробей чирикает и летит"); }
+}
+
+// Страус просто птица, он не обязан летать и не нарушает контракты.
+class Ostrich extends Bird { }
+```
+
+**I — Interface Segregation Principle** (Принцип разделения интерфейса)  
+Определение: Много специализированных интерфейсов лучше, чем один универсальный («жирный»). Клиенты не должны быть вынуждены зависеть от методов, которые они не используют.
+
+Пример: У нас есть интерфейс ```Worker``` с методами ```work()``` и ```eat()```. Но что делать с классом ```Robot```? Робот работает, но не ест. Ему приходится реализовывать метод ```eat()```, который ему не нужен.
+
+**Плохой пример (Нарушение ISP)**:
+```Java
+interface Worker {
+    void work();
+    void eat(); // Роботам это не нужно!
+}
+
+class HumanWorker implements Worker {
+    @Override public void work() { /* ... */ }
+    @Override public void eat() { /* ... */ }
+}
+
+class RobotWorker implements Worker {
+    @Override public void work() { /* ... */ }
+    @Override public void eat() { /* Робот не ест! Что тут писать? */ }
+}
+```
+
+**Хороший пример (Соблюдение ISP)**:  
+Разделим интерфейс на два маленьких и специализированных.
+```Java
+interface Workable {
+    void work();
+}
+interface Feedable {
+    void eat();
+}
+
+// Человек может и работать, и есть
+class HumanWorker implements Workable, Feedable {
+    @Override public void work() { /* ... */ }
+    @Override public void eat() { /* ... */ }
+}
+// Робот только работает. Ему не нужно реализовывать лишний метод.
+class RobotWorker implements Workable {
+    @Override public void work() { /* ... */ }
+}
+```
+
+**D — Dependency Inversion Principle** (Принцип инверсии зависимостей)  
+Определение: Модули верхних уровней не должны зависеть от модулей нижних уровней. Оба типа модулей должны зависеть от абстракций. Абстракции не должны зависеть от деталей. Детали должны зависеть от абстракций. Проще говоря: «Программируйте на основе интерфейсов (абстракций), а не реализаций».  
+Пример: Класс ```Switch``` (Выключатель) напрямую управляет конкретной лампой ```Bulb```. Если мы захотим управлять вентилятором или светодиодом, нам придется переписывать класс ```Switch```. Он слишком сильно зависит от конкретной реализации.
+
+**Плохой пример (Нарушение DIP)**:
+```Java
+class Bulb {
+    public void turnOn() { System.out.println("Лампа зажглась"); }
+}
+// Выключатель жестко привязан к лампе Bulb. Он не может управлять ничем другим.
+class Switch {
+    private Bulb bulb;
+    public Switch(Bulb bulb) { this.bulb = bulb; }
+    public void press() { bulb.turnOn(); }
+}
+```
+
+**Хороший пример (Соблюдение DIP)**:  
+Введем абстракцию — интерфейс ```Device``` (Устройство). Теперь выключатель может управлять любым устройством, которое реализует этот интерфейс.
+```Java
+// Абстракция (Интерфейс)
+interface Device {
+    void turnOn();
+}
+// Реализация 1: Лампа зависит от абстракции (неявно)
+class Bulb implements Device {
+    @Override public void turnOn() { System.out.println("Лампа зажглась"); }
+}
+// Реализация 2: Вентилятор зависит от абстракции (неявно)
+class Fan implements Device {
+    @Override public void turnOn() { System.out.println("Вентилятор зашумел"); }
+}
+// Модуль верхнего уровня Switch зависит ТОЛЬКО от абстракции Device.
+// Ему все равно, что именно включать.
+class Switch {
+    private Device device;
+    public Switch(Device device) { this.device = device; } // Инъекция зависимости через конструктор!
+    public void press() { device.turnOn(); }
+}
+```
+
 # Практика.
 
 ## 1. Напишите программу, которая находит максимальное число в массиве целых чисел.
