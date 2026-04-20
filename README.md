@@ -849,8 +849,26 @@ class Switch {
 ```
 
 ## 21. Структуры данных.
-
-
+```
+Iterable (Интерфейс)
+└── Collection (Интерфейс)
+    ├── List (Интерфейс)
+    │   ├── ArrayList
+    │   ├── Vector
+    │   └── LinkedList
+    │       └── Stack
+    ├── Queue (Интерфейс)
+    │   ├── Deque (Интерфейс)
+    │   │   ├── LinkedList ← Реализует и List, и Deque!
+    │   │   └── ArrayDeque
+    │   └── PriorityQueue
+    └── Set (Интерфейс)
+        ├── SortedSet (Интерфейс)
+        │   └── NavigableSet (Интерфейс)
+        │       └── TreeSet
+        └── HashSet
+            └── LinkedHashSet
+```
 
 # Практика.
 
