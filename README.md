@@ -20,6 +20,7 @@
 ### [18. Жизненный цикл сервлета](#18-какой-цикл-управляет-жизненным-циклом-сервлетов-в-веб-приложениях-java-ee-перечислите-этапы-жизненного-цикла-сервлета-и-объясните-их-назначение)  
 ### [19. Stream API](#19-расскажите-про-stream-api)  
 ### [20. Принципы SOLID](#20-объясните-принципы-solid-и-приведите-примеры-на-java)  
+### [21. Структуры данных](#21-Структуры-данных)  
 ### [Практика](практика)  
 <br><br> 
 ## 1. Объясните концепцию полиморфизма, абстракции, наследования и инкапсуляции в Java и приведите пример.
@@ -689,13 +690,17 @@ interface Shape {
 class Square implements Shape {
     private double side;
     public Square(double side) { this.side = side; }
-    @Override public double getArea() { return side * side; }
+
+    @Override
+    public double getArea() { return side * side; }
 }
 
 class Circle implements Shape {
     private double radius;
     public Circle(double radius) { this.radius = radius; }
-    @Override public double getArea() { return Math.PI * radius * radius; }
+
+    @Override
+    public double getArea() { return Math.PI * radius * radius; }
 }
 
 // Класс-клиент закрыт для модификации. Ему все равно, какая именно фигура.
@@ -740,10 +745,11 @@ abstract class Bird { }
 
 // Летающие птицы реализуют интерфейс Flyable
 class Sparrow extends Bird implements Flyable {
-    @Override public void fly() { System.out.println("Воробей чирикает и летит"); }
+    @Override
+    public void fly() { System.out.println("Воробей чирикает и летит"); }
 }
 
-// Страус просто птица, он не обязан летать и не нарушает контракты.
+// Страус просто птица, он не летает и не нарушает контракты.
 class Ostrich extends Bird { }
 ```
 
@@ -760,13 +766,18 @@ interface Worker {
 }
 
 class HumanWorker implements Worker {
-    @Override public void work() { /* ... */ }
-    @Override public void eat() { /* ... */ }
+    @Override
+    public void work() { /* ... */ }
+
+    @Override
+    public void eat() { /* ... */ }
 }
 
 class RobotWorker implements Worker {
-    @Override public void work() { /* ... */ }
-    @Override public void eat() { /* Робот не ест! Что тут писать? */ }
+    @Override
+    public void work() { /* ... */ }
+    @Override
+    public void eat() { /* Робот не ест! Что тут писать? */ }
 }
 ```
 
@@ -782,12 +793,15 @@ interface Feedable {
 
 // Человек может и работать, и есть
 class HumanWorker implements Workable, Feedable {
-    @Override public void work() { /* ... */ }
-    @Override public void eat() { /* ... */ }
+    @Override
+    public void work() { /* ... */ }
+    @Override
+    public void eat() { /* ... */ }
 }
 // Робот только работает. Ему не нужно реализовывать лишний метод.
 class RobotWorker implements Workable {
-    @Override public void work() { /* ... */ }
+    @Override
+    public void work() { /* ... */ }
 }
 ```
 
@@ -817,11 +831,13 @@ interface Device {
 }
 // Реализация 1: Лампа зависит от абстракции (неявно)
 class Bulb implements Device {
-    @Override public void turnOn() { System.out.println("Лампа зажглась"); }
+    @Override
+    public void turnOn() { System.out.println("Лампа зажглась"); }
 }
 // Реализация 2: Вентилятор зависит от абстракции (неявно)
 class Fan implements Device {
-    @Override public void turnOn() { System.out.println("Вентилятор зашумел"); }
+    @Override
+    public void turnOn() { System.out.println("Вентилятор зашумел"); }
 }
 // Модуль верхнего уровня Switch зависит ТОЛЬКО от абстракции Device.
 // Ему все равно, что именно включать.
@@ -831,6 +847,8 @@ class Switch {
     public void press() { device.turnOn(); }
 }
 ```
+
+## 21. Структуры данных.
 
 # Практика.
 
