@@ -850,9 +850,9 @@ class Switch {
 
 ## 21. Структуры данных Java.
 Структуры данных бывают линейными, нелинейными, ассоциативными.  
-Линейные: Array, ArrayList, LinkedList  
-Нелинейные: TreeSet, TreeMap  
-Ассоциативные (хэш-таблицы/словари): HashSet, HashMap, LinkedHashMap, LinkedHashSet
+Линейные: ```Array, ArrayList, LinkedList```  
+Нелинейные: ```TreeSet, TreeMap```  
+Ассоциативные (хэш-таблицы/словари): ```HashSet, HashMap, LinkedHashMap, LinkedHashSet```
 ```
 Iterable (Интерфейс)
 ├── Collection (Интерфейс)
