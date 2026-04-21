@@ -849,25 +849,37 @@ class Switch {
 ```
 
 ## 21. Структуры данных Java.
+Структуры данных бывают линейными, нелинейными, ассоциативными.  
+Линейные: Array, ArrayList, LinkedList  
+Нелинейные: TreeSet, TreeMap  
+Ассоциативные (хэш-таблицы/словари): HashSet, HashMap, LinkedHashMap, LinkedHashSet
 ```
 Iterable (Интерфейс)
-└── Collection (Интерфейс)
-    ├── List (Интерфейс)
-    │   ├── ArrayList
-    │   ├── Vector
-    │   └── LinkedList
-    │       └── Stack
-    ├── Queue (Интерфейс)
-    │   ├── Deque (Интерфейс)
-    │   │   ├── LinkedList ← Реализует и List, и Deque!
-    │   │   └── ArrayDeque
-    │   └── PriorityQueue
-    └── Set (Интерфейс)
-        ├── SortedSet (Интерфейс)
-        │   └── NavigableSet (Интерфейс)
-        │       └── TreeSet
-        └── HashSet
-            └── LinkedHashSet
+├── Collection (Интерфейс)
+│   ├── List (Интерфейс)
+│   │   ├── ArrayList
+│   │   ├── Vector
+│   │   └── LinkedList
+│   │       └── Stack
+│   ├── Queue (Интерфейс)
+│   │   ├── Deque (Интерфейс)
+│   │   │   ├── LinkedList ← Реализует и List, и Deque!
+│   │   │   └── ArrayDeque
+│   │   └── PriorityQueue
+│   └── Set (Интерфейс)
+│       ├── SortedSet (Интерфейс)
+│       │   └── NavigableSet (Интерфейс)
+│       │       └── TreeSet
+│       └── HashSet
+│           └── LinkedHashSet
+│
+└── Map (Интерфейс)
+    ├── SortedMap (Интерфейс)
+    │   └── NavigableMap (Интерфейс)
+    │       └── TreeMap
+    └── HashMap
+        ├── LinkedHashMap
+        └── Hashtable ← Устаревший, синхронизированный аналог HashMap
 ```
 
 ## Практика Java.
