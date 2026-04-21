@@ -863,7 +863,7 @@ Iterable (Интерфейс)
 │   │       └── Stack
 │   ├── Queue (Интерфейс)
 │   │   ├── Deque (Интерфейс)
-│   │   │   ├── LinkedList ← Реализует и List, и Deque!
+│   │   │   ├── LinkedList ← Реализует и List, и Deque
 │   │   │   └── ArrayDeque
 │   │   └── PriorityQueue
 │   └── Set (Интерфейс)
@@ -879,7 +879,73 @@ Iterable (Интерфейс)
     │       └── TreeMap
     └── HashMap
         ├── LinkedHashMap
-        └── Hashtable ← Устаревший, синхронизированный аналог HashMap
+        └── Hashtable ← Устаревший, потокобезопасный аналог HashMap
+```
+**Array** - массив значений. Располагается в памяти *последовательно*. Имеет быстрый доступ к значению *O(1)*, т.к есть прямое обращение к ячейке памяти с значением, **ячейка_памяти_искомая = ячейка_памяти_начала_массива + (индекс_значения * размер_ячейки)**. Вставка элемента в середину происходит за *O(n)*, в конец за *O(1)* - это связано с тем, что вставляя новый элемент, все существующие элементы, стоящие справа, должны будут сдвинуться.
+```Java
+int[] array = {1, 2, 3};
+```
+**ArrayList** - динамический список. Похож на **Array**, но умеет расширяться по мере заполнения. Также имеет прямое обращение к ячейке памяти с значением, поэтому у него быстрый доступ к значению *O(1)*, вставка элемента в середину происходит за *O(n)*, в конец за *O(1)*.
+Например: ```|1|2|3|4|5|6|7|8|9|```, чтобы вставить значение *333* между *2* и *3* придется сдвинуть элементы с *3* по *9* вправо в памяти, это трудоемкая операция.
+```Java
+import java.util.ArrayList;
+ArrayList<String> list = new ArrayList<>();
+list.add("A");
+list.add("B");
+list.add("C");
+```
+**LinkedArrayList** - динамический двусвязный список. Умеет расширяться по мере заполнения, каждый элемент содержит ссылку (*Link*) на элемент, идущий до него, и идущий после него (двусвязный список). Элементы *не располгаются в памяти последовательно*, из-за этого у него нет прямого обращения к ячейке памяти с значением. Для того, чтобы найти нужный элемент, идет последовательный перебор элементов и просмотр ссылок, на которые они ссылаются, пока не найдется нужный элемент, из-за этого поиск значения идет за *O(n)*. Но вставка элемента происходит быстро, за *O(1)* за счет того, что не нужно сдвигать элементы, нужно просто заменить ссылки, отвечающие за последовательность элементов.
+Например: ```|1|2|3|4|5|6|7|8|9|```, чтобы вставить значение *333* между *2* и *3* произойдет изменение связей: у *2* изменится ссылка, что после нее теперь идет не *3*, а *333*, а у *3* изменится ссылка, что перед ней теперь не *2*, а *333*.
+```Java
+import java.util.LinkedList;
+LinkedList<String> linkedList = new LinkedList<>();
+linkedList.add("X");
+linkedList.add("Y");
+linkedList.add("Z");
+```
+```Java
+import java.util.HashSet;
+HashSet<Integer> hashSet = new HashSet<>();
+hashSet.add(10);
+hashSet.add(20);
+hashSet.add(30);
+```
+```Java
+import java.util.LinkedHashSet;
+LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
+linkedHashSet.add("Alpha");
+linkedHashSet.add("Beta");
+linkedHashSet.add("Gamma");
+```
+```Java
+import java.util.TreeSet;
+TreeSet<Integer> treeSet = new TreeSet<>();
+treeSet.add(5);
+treeSet.add(1);
+treeSet.add(3);
+// Вывод: [1, 3, 5]
+```
+```Java
+import java.util.HashMap;
+HashMap<String, Integer> hashMap = new HashMap<>();
+hashMap.put("one", 1);
+hashMap.put("two", 2);
+hashMap.put("three", 3);
+```
+```Java
+import java.util.LinkedHashMap;
+LinkedHashMap<String, String> linkedHashMap = new LinkedHashMap<>();
+linkedHashMap.put("key1", "value1");
+linkedHashMap.put("key2", "value2");
+linkedHashMap.put("key3", "value3");
+```
+```Java
+import java.util.TreeMap;
+TreeMap<Integer, String> treeMap = new TreeMap<>();
+treeMap.put(3, "C");
+treeMap.put(1, "A");
+treeMap.put(2, "B");
+// Ключи будут отсортированы: {1=A, 2=B, 3=C}
 ```
 
 ## Практика Java.
